@@ -15,7 +15,7 @@ $stmt = $conn->prepare("
 
 $stmt->execute();
 
-$result = $stmt->get_result(); // get_result() requires mysqlnd driver
+$result = $stmt->get_result(); 
 
 $tasks = [];
 

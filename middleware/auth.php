@@ -6,7 +6,7 @@ require_once __DIR__ . '/../utils/response.php';
 function authenticate() {
     if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
         sendResponse(401, 'error', 'Authorization token missing');
-        exit; // stop further execution
+        exit; 
     }
 
     $token = $_SERVER['HTTP_AUTHORIZATION'];
@@ -31,7 +31,7 @@ function authenticate() {
         exit;
     }
 
-    return $user; // Return employee details
+    return $user;
 }
 
 ?>

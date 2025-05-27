@@ -2,8 +2,8 @@
 
 // phpinfo();
 // exit;
-$host = 'localhost';
-$db = 'employee_management';
+$host = '127.0.0.1';
+$db = 'employee_management-1';
 $user = 'root';
 $password = '';
 $charset = 'utf8mb4';
@@ -19,5 +19,5 @@ if ($conn->connect_error) {
 // Set charset
 $conn->set_charset($charset);
 
-echo "Connected successfully";
+//echo "Connected successfully";
 ?>

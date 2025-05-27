@@ -6,21 +6,23 @@ require_once '../../utils/response.php';
 $user = authenticate();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-     $data = json_decode(file_get_contents("php://input"), true);
+    $data = json_decode(file_get_contents("php://input"), true);
+     var_dump($data,  $_REQUEST);
+
     $taskId = $_POST['task_id'];
     $comment = $_POST['comment'];
     $mention = $_POST['mention'] ?? null;
     $parentId = $_POST['parent_id'] ?? null;
     $filePath = null;
 
-    //Handle file upload
-    if (!empty($_FILES['file']['name'])) {
-        $filename = time() . '_' . basename($_FILES['file']['name']);
-        $dest = UPLOAD_DIR . $filename;
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $dest)) {
-            $filePath = 'uploads/tasks/' . $filename;
-        }
-    }
+    //Handle file upload NEEDS TO BE IGNORED FOR NOW
+    // if (!empty($_FILES['file']['name'])) {
+    //     $filename = time() . '_' . basename($_FILES['file']['name']);
+    //     $dest = UPLOAD_DIR . $filename;
+    //     if (move_uploaded_file($_FILES['file']['tmp_name'], $dest)) {
+    //         $filePath = 'uploads/tasks/' . $filename;
+    //     }
+    // }
 
     $stmt = $conn->prepare("INSERT INTO task_comments (task_id, user_id, comment, mention, parent_id, file_path) VALUES (?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {

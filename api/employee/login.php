@@ -20,10 +20,12 @@ if (!$check['valid']) {
 $email = sanitizeInput($data['email']);
 $password = $data['password'];
 
-$stmt = $conn->prepare("SELECT * FROM employees WHERE email = ?");
+$stmt = $conn->prepare("SELECT ea.*, e.first_name, e.last_name 
+                        FROM employee_auth ea 
+                        JOIN employees e ON ea.employee_id = e.id 
+                        WHERE ea.email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
-
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 $stmt->close();
@@ -35,6 +37,7 @@ if (!$user || !password_verify($password, $user['password'])) {
 
 sendResponse(200, 'success', 'Login successful', [
     'token' => $user['token'],
-    'name' => $user['name'],
-    'role' => $user['role']
+    'name' => $user['first_name'] . ' ' . $user['last_name'],
+    'role' => $user['role'],
+    'employee_id' => $user['employee_id']
 ]);

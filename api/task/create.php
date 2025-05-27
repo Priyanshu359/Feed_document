@@ -26,7 +26,7 @@ if (!$stmt) {
 }
 
 // Bind parameters: i = int, s = string
-$stmt->bind_param("issis", $projectId, $title, $desc, $user['id'], $due);
+$stmt->bind_param("issis", $projectId, $title, $desc, $user['id'], $due); // We have to take input as date format
 
 $success = $stmt->execute();
 
