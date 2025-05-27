@@ -18,17 +18,19 @@ $password = password_hash($data['password'], PASSWORD_BCRYPT);
 $role = sanitizeInput($data['role']);
 
 // Check for duplicate mail
-$stmt = $pdo->prepare("SELECT id FROM employees WHERE email = ?");
-$stmt->execute([$email]);
+$stmt = $conn->prepare("SELECT id FROM employees WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
 if($stmt->fetch()) {
     sendResponse(400, 'error', 'Email already registered');
 }
 
 // Generate a simple auth token
-$token = bin2hex(randoom_bytes(16));
+$token = bin2hex(random_bytes(16));
 
-$stmt = $pdo->prepare("INSERT INTO employees (name, email, password, role, token) VALUES (?,?,?,?,?)");
-$success = $stmt->execute([$name, $email, $password, $role, $token]);
+$stmt = $conn->prepare("INSERT INTO employees (name, email, password, role, token) VALUES (?,?,?,?,?)");
+$stmt->bind_param("sssss", $name, $email, $password, $role, $token);
+$success = $stmt->execute();
 
 if($success) {
     sendResponse(201, 'success', 'Employee registered successfully', ['token' => $token]);
@@ -37,3 +39,37 @@ else {
     sendResponse(500, 'error', 'Failed to register employee');
 }
 ?>
+
+
+/*
+{
+            "id": "7",
+            "name": "Priyanshu",
+            "email": "priyanshu123@gmail.com",
+            "role": "0"
+        },
+        {
+            "id": "6",
+            "name": "Vasu",
+            "email": "vasu123@gmail.com",
+            "role": "0"
+        },
+        {
+            "id": "5",
+            "name": "Kashyap",
+            "email": "kashyap123@gmail.com",
+            "role": "0"
+        },
+        {
+            "id": "4",
+            "name": "Kane",
+            "email": "kane123@gmail.com",
+            "role": "0"
+        },
+        {
+            "id": "3",
+            "name": "Rahul",
+            "email": "rahul123@gmail.com",
+            "role": "0"
+        },
+*/

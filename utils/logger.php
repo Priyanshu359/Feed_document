@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/../cofig/config.php';
+require_once __DIR__.'/../config/config.php';
 
 function logAdminAction($action, $performedBy) {
     $timestamp = date('Y-m-d H:i:s');

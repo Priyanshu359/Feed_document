@@ -18,8 +18,9 @@ if (!$check['valid']) {
 $taskId = intval($data['task_id']);
 $empId = intval($data['employee_id']);
 
-$stmt = $pdo->prepare("UPDATE tasks SET assigned_to = ? WHERE id = ?");
-$success = $stmt->execute([$empId, $taskId]);
+$stmt = $conn->prepare("UPDATE tasks SET assigned_to = ? WHERE id = ?");
+$stmt->bind_param("ii", $empId, $taskId);  // 'ii' means two integers
+$success = $stmt->execute();
 
 if ($success) {
     sendResponse(200, 'success', 'Task assigned');

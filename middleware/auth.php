@@ -1,23 +1,37 @@
-<?php 
+<?php
 
-require_once __DIR__.'/../config/db.php';
-require_once __DIR__.'/../utils/response.php';
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../utils/response.php';
 
 function authenticate() {
-    if(!isset($_SERVER['HTTP_AUTHORIZATION'])) {
-        sendResponse(401, 'error'.'Authorization token missing');
+    if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        sendResponse(401, 'error', 'Authorization token missing');
+        exit; // stop further execution
     }
 
     $token = $_SERVER['HTTP_AUTHORIZATION'];
 
-    global $pdo;
-    $stmt->execute([$token]);
-    $user = $stmt->fetch();
+    global $conn;
 
-    if(!$user) {
-        sendResponse(403, 'error', 'Invalid or expired token');
+    // Prepare statement to find user by token
+    $stmt = $conn->prepare("SELECT * FROM employees WHERE token = ?");
+    if (!$stmt) {
+        sendResponse(500, 'error', 'Server error: failed to prepare statement');
+        exit;
     }
-    return $user;  // Return employee details for use in endpoints
+
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if (!$user) {
+        sendResponse(403, 'error', 'Invalid or expired token');
+        exit;
+    }
+
+    return $user; // Return employee details
 }
 
 ?>
